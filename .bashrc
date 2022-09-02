@@ -5,11 +5,10 @@
 
 ### bash settings
 set -o vi
-export PS1='\u@\h:/.../\W (!\!) \$ '
+export PS1='\u@\h \W \$ \! '
 
 ### k8s settings
-which kubectl \
-	&& {
+k8s_settings(){
 	kubectl completion bash > ~/.bashrc.kubectl;
 	source ~/.bashrc.kubectl;
 	complete -F __start_kubectl k;
@@ -31,11 +30,17 @@ which kubectl \
 		dry='--dry-run=client' \
 		now='--force --grace-period=0' \
 		;
-	}
+}
+which kubectl && k8s_settings
 
 ### create .vimrc
+vim_settings(){
+	cp ~/.vim ~/.vim.orig.$((RANDOM % 999))
 cat <<EOF > ~/.vimrc
 set tabstop=2 softtabstop=2 shiftwidth=2 expandtab 
 set textwidth=80 paste cursorcolumn
 syntax on
 EOF
+}
+vim_settings
+
