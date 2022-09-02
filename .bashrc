@@ -1,8 +1,11 @@
 #!/bin/bash
 
+# Download this repo as ZIP
+# curl -O dotfiles.zip  https://github.com/gnyers/dotfiles/archive/refs/heads/main.zip
+
 ### bash settings
 set -o vi
-export PS1='\u@\h:..\W (!\!) \$ '
+export PS1='\u@\h:/.../\W (!\!) \$ '
 
 ### k8s settings
 which kubectl \
@@ -32,7 +35,7 @@ which kubectl \
 
 ### create .vimrc
 cat <<EOF > ~/.vimrc
-set tabwidth=2 softtabwidth=2 shiftwidth=2 expandtab 
+set tabstop=2 softtabstop=2 shiftwidth=2 expandtab 
 set textwidth=80 paste cursorcolumn
 syntax on
 EOF
