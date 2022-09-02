@@ -1,6 +1,8 @@
 #!/bin/bash
 
-
+### bash settings
+set -o vi
+export PS1='\u@\h:..\W (!\!) \$ '
 
 ### k8s settings
 which kubectl \
