@@ -35,7 +35,7 @@ which kubectl && k8s_settings
 
 ### create .vimrc
 vim_settings(){
-	cp ~/.vim ~/.vim.orig.$((RANDOM % 999))
+	cp ~/.vimrc ~/.vimrc.orig.$((RANDOM % 999))
 cat <<EOF > ~/.vimrc
 set tabstop=2 softtabstop=2 shiftwidth=2 expandtab 
 set textwidth=80 paste cursorcolumn
