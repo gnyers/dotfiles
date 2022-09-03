@@ -58,6 +58,31 @@ k8s_settings(){
 }
 which kubectl > /dev/null 2>&1  && k8s_settings
 
+### helm settings
+helm_install(){
+	URL_RELEASES=https://github.com/helm/helm/releases
+	URL_DOWNLOAD=https://get.helm.sh
+	HELM_VERSION='v3.9.3'
+	[ $UID -eq 0 ] \
+	  || { echo "*** ERROR: Must be root (current UID=$UID)"; exit 1; }
+	echo "*** INFO: Installing Helm"
+	[ -x /usr/local/bin/helm ] \
+	  || (
+	      curl -O ${URL_DOWNLOAD}/helm-${HELM_VERSION}-linux-amd64.tar.gz;
+	      tar xf helm-${HELM_VERSION}-linux-amd64.tar.gz;
+	      find . -iname helm -exec install -m 755 {} /usr/local/bin \;
+	     )
+}
+helm_settings(){
+	[ -f  ~/.bashrc.helm ] || kubectl completion bash > ~/.bashrc.kubectl;
+	source ~/.bashrc.kubectl;
+}
+which helm > /dev/null 2>&1 \
+&& helm_settings  \
+|| { helm_install && helm_settings; } \
+
+
+
 ### create .vimrc
 vim_settings(){
 	cp ~/.vimrc ~/.vimrc.orig.$((RANDOM % 999))
