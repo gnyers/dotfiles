@@ -1,17 +1,31 @@
 #!/bin/bash
 
-# Download this repo as ZIP
-# curl -O dotfiles.zip  https://github.com/gnyers/dotfiles/archive/refs/heads/main.zip
+# Download latest version of this repo as ZIP
+# wget  https://github.com/gnyers/dotfiles/archive/refs/heads/main.zip
 
 ### bash settings
+install_bashrc(){
+	THIS=$( realpath --relative-to=. $BASH_SOURCE )
+	SIG='source ~/.bashrc.custom'
+	cp $THIS ~/.bashrc.custom
+	grep "$SIG" ~/.bashrc \
+	&& echo "*** INFO: Customizations for ~/.bashrc already installed" \
+	|| { echo "*** INFO: to activate customizations, execute:";
+	     echo "    echo '$SIG' >> ~/.bashrc";
+	   }
+} 
 set -o vi
 export PS1='\u@\h \W \$ \! '
+alias .bashrc='source ~/.bashrc && echo "*** Reloaded: ~/.bashrc"'
 
 
 ### readline settings
 inputrc_settings(){
-	cat <<-EOF
-	"\C-k": clear-screen
+	cat <<-EOF > ~/.inputrc
+	"\C-f": clear-screen
+	"\el": clear-screen
+	"\C-e": re-read-init-file
+	"\ee": re-read-init-file
 	EOF
 }
 inputrc_settings
@@ -31,6 +45,8 @@ k8s_settings(){
 		ks='kubectl describe' \
 		kgp='kubectl get pod' \
 		kgd='kubectl get deploy' \
+		kcs='kubectl config set-context --current --namespace' \
+		kcg='kubectl config get-contexts' \
 		;
 	
 	export \
@@ -40,14 +56,14 @@ k8s_settings(){
 		now='--force --grace-period=0' \
 		;
 }
-which kubectl && k8s_settings
+which kubectl > /dev/null 2>&1  && k8s_settings
 
 ### create .vimrc
 vim_settings(){
 	cp ~/.vimrc ~/.vimrc.orig.$((RANDOM % 999))
 	cat <<-EOF > ~/.vimrc
-	set tabstop=2 softtabstop=2 shiftwidth=2 expandtab 
-	set textwidth=80 paste cursorcolumn
+	set tabstop=2 softtabstop=2 shiftwidth=2 expandtab ignorecase
+	set textwidth=80 paste cursorcolumn autoindent smartindent
 	syntax on
 	EOF
 }
