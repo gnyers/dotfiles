@@ -53,10 +53,20 @@ k8s_settings(){
 		oy='-o yaml' \
 		ow='-o wide' \
 		dry='--dry-run=client' \
+		do='--dry-run=client -o yaml' \
 		now='--force --grace-period=0' \
 		;
 }
 which kubectl > /dev/null 2>&1  && k8s_settings
+
+### busybox for debugging
+busybox_cp(){
+	CONTAINER=$1; shift
+	[ -x ~/busybox ] \
+	&& { kubectl cp ~/busybox  $CONTAINER:/bin/ && \
+	     echo "*** OK: copied busybox to $CONTAINER"; } \
+	|| echo "*** FAILED: file ~/busybox does not exists OR not executable"
+}
 
 ### helm settings
 helm_install(){
