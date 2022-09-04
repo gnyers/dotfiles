@@ -6,8 +6,9 @@
 ### bash settings
 install_bashrc(){
 	THIS=$( realpath --relative-to=. $BASH_SOURCE )
+	THIS=$( realpath --relative-to=. ~/.bashrc.custom )
 	SIG='source ~/.bashrc.custom'
-	cp $THIS ~/.bashrc.custom
+	[ "$THIS" = "$THAT" ] || cp $THIS ~/.bashrc.custom
 	grep "$SIG" ~/.bashrc \
 	&& echo "*** INFO: Customizations for ~/.bashrc already installed" \
 	|| { echo "*** INFO: to activate customizations, execute:";
@@ -66,6 +67,9 @@ busybox_cp(){
 	&& { kubectl cp ~/busybox  $CONTAINER:/bin/ && \
 	     echo "*** OK: copied busybox to $CONTAINER"; } \
 	|| echo "*** FAILED: file ~/busybox does not exists OR not executable"
+	echo "Now you may execute:";
+	echo "   kubectl exec -it $CONTAINER -- /bin/busybox sh";
+	echo ;
 }
 
 ### helm settings
